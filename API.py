@@ -9,9 +9,20 @@ class Transactions (BaseModel):
     date: date 
     category: str 
 
+Stored_transaction = {}
+
+tran_id = 0 
 
 app = FastAPI()
 
 @app.post("/Transactions/")
-async def Transaction(Transactions: Transactions):
-    return Transactions
+async def create_transaction(new_transaction: Transactions):
+   # This is called In-Memory Storage
+    global tran_id 
+    transaction_dict = new_transaction.model_dump()
+    tran_id += 1 
+    Stored_transaction[tran_id] = transaction_dict
+    returned_transaction = {"id": tran_id, **transaction_dict}
+    
+    
+    return returned_transaction
