@@ -37,4 +37,13 @@ def single_transaction(tran_id: int):
         raise HTTPException(status_code=404, detail = "Item not found") # displays error code for the user 
     
     return stored_transaction[tran_id]
-    
+
+
+@app.delete("/Transactions")
+def remove_transactions(tran_id: int):
+    if tran_id not in stored_transaction:
+        raise HTTPException(status_code=404, detail= "Cant be found") 
+    del stored_transaction[tran_id]
+
+    return{"deleted": tran_id}
+
