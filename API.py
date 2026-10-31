@@ -14,7 +14,7 @@ stored_transaction = {} # this is how we're going to store the transactions to b
 tran_id = 0 
 
 app = FastAPI()
-
+# CREATE portion of CRUD endpoints 
 @app.post("/Transactions")
 async def create_transaction(new_transaction: Transactions):
    # This is called In-Memory Storage: wiped whenever server restarts
@@ -25,20 +25,23 @@ async def create_transaction(new_transaction: Transactions):
     returned_transaction = {"id": tran_id, **transaction_dict} #  ** unpacks the fields into the response next to the id
     return returned_transaction
 
-
+# # READ portion of CRUD endpoints 
 @app.get("/Transactions") # defines the route for GET 
 def get_transactions(): # this func gives us all transactions 
-    return stored_transaction
-
-
-@app.get("/Transactions{tran_id}")
+    all_transactions =[]
+    for id, info in stored_transaction.items():
+        all_transactions.append({"id": id, **info})
+    
+    return all_transactions
+ 
+@app.get("/Transactions/{tran_id}")
 def single_transaction(tran_id: int):
     if tran_id not in stored_transaction:  # checks if id is there 
         raise HTTPException(status_code=404, detail = "Item not found") # displays error code for the user 
     
-    return stored_transaction[tran_id]
+    return {"id":tran_id, **stored_transaction[tran_id]}
 
-
+# DELTE portion of CRUD endpoints 
 @app.delete("/Transactions")
 def remove_transactions(tran_id: int):
     if tran_id not in stored_transaction:
@@ -46,5 +49,13 @@ def remove_transactions(tran_id: int):
     del stored_transaction[tran_id]
 
     return{"deleted": tran_id}
+# UPDATE portion of CRUD id
+@app.put("/Transactions/{tran_id}")
+def update_transaction(tran_id: int, updated_transaction: Transactions ):
+    # Checks if the id even exists
+    if tran_id not in stored_transaction:
+        raise HTTPException(status_code=404, detail = "Item not found")
+    
+    stored_transaction[tran_id] = updated_transaction.model_dump() #Updates Transaction 
 
-
+    return {"message": "Transactions updated","id": stored_transaction[tran_id]}
