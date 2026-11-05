@@ -1,13 +1,13 @@
 from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
+from pydantic import BaseModel,Field
 from datetime import date
 
 # Request Body: is the API equilivent to a struct in c++ , it declares the shape  
 class Transactions (BaseModel):
     description: str | None = None# this makes the choice of adding a description of the transaction optional 
-    price: float
+    price: float = Field(gt=0) # insures value is greater than 0 
     date: date 
-    category: str 
+    category: str = Field(min_length=1)
 
 stored_transaction = {} # this is how we're going to store the transactions to be able to output them whenever 
 
