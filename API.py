@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel,Field
 from datetime import date
-
+from fastapi.middleware.cors import CORSMiddleware
 # Request Body: is the API equilivent to a struct in c++ , it declares the shape  
 class Transactions (BaseModel):
     description: str | None = None# this makes the choice of adding a description of the transaction optional 
@@ -14,6 +14,7 @@ stored_transaction = {} # this is how we're going to store the transactions to b
 tran_id = 0 
 
 app = FastAPI()
+app.add_middleware(CORSMiddleware, allow_origins=["http://localhost:5173"])
 # CREATE portion of CRUD endpoints 
 @app.post("/Transactions")
 async def create_transaction(new_transaction: Transactions):
