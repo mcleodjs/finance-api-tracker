@@ -18,6 +18,25 @@ function App() {
 
   const [price, setPrice] = useState("")
 
+
+
+function handleAdd(e){
+  e.preventDefault()
+  fetch("http://127.0.0.1:8000/Transactions", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({description: description, category: category, date: date, price: Number(price)})
+  })
+    .then(res => res.json())
+    .then(newTransaction => {
+      setTransactions([...transactions, newTransaction])
+      setCategory("")
+      setDescription("")
+      setDate("")
+      setPrice("")
+    })
+}
+
   // useEffect runs code outside of React  after first render "connecting" to it our API/Python
   useEffect(() => {
     fetch("http://127.0.0.1:8000/Transactions") // this calls our API
@@ -35,7 +54,7 @@ function App() {
           <li key={transaction.id}>{transaction.description} - ${transaction.price} - {transaction.date} - {transaction.category} </li>
         ))}
       </ul>
-
+      <form onSubmit ={handleAdd}>
       <input
         className="box-wide"
         placeholder="Category"
@@ -61,7 +80,11 @@ function App() {
         value={price}
         onChange={(e) => setPrice(e.target.value)}
       />
+    <button type="submit"> Add transaction </button>
+    </form>
     </>
+    
+    
   )
 }
 

@@ -14,7 +14,8 @@ stored_transaction = {} # this is how we're going to store the transactions to b
 tran_id = 0 
 
 app = FastAPI()
-app.add_middleware(CORSMiddleware, allow_origins=["http://localhost:5173"])
+app.add_middleware(CORSMiddleware, allow_origins=["http://localhost:5173"], allow_methods =["*"],
+                   allow_headers =["*"])
 # CREATE portion of CRUD endpoints 
 @app.post("/Transactions")
 async def create_transaction(new_transaction: Transactions):
