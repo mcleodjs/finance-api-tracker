@@ -1,14 +1,13 @@
 import { useState, useEffect } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
+
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [transactions, setTransactions] = useState([])
+// this is how we get the front end to get the frontend to remember transactions and update them if they change.
   // this is how we get the front end to get the frontend to remember transactions and update them if they change. 
 
-  const [transactions, setTransactions] = useState([]); // we use '[]' instead of 0 because my api returns a list.
+  
 
   const [category, setCategory] = useState("")
 
@@ -45,47 +44,42 @@ function handleAdd(e){
       // this gets call when the data is ready
   }, [])
 
-  console.log(transactions)
+
 
   return (
-    <>
-      <ul>
+  <main className="app">
+    <header className="app-header">
+      <h1>Finance Tracker</h1>
+      <p>Track what you spend, one transaction at a time.</p>
+    </header>
+
+    <section className="card">
+      <h2>Transactions</h2>
+      <ul className="tx-list">
         {transactions.map(transaction => (
-          <li key={transaction.id}>{transaction.description} - ${transaction.price} - {transaction.date} - {transaction.category} </li>
+          <li key={transaction.id} className="tx-item">
+            <div className="tx-main">
+              <span className="tx-desc">{transaction.description}</span>
+              <span className="tx-cat">{transaction.category}</span>
+            </div>
+            <span className="tx-date">{transaction.date}</span>
+            <span className="tx-price">${transaction.price}</span>
+          </li>
         ))}
       </ul>
-      <form onSubmit ={handleAdd}>
-      <input
-        className="box-wide"
-        placeholder="Category"
-        value={category}
-        onChange={(e) => setCategory(e.target.value)}
-      />
-      <input
-        className="box-wide"
-        placeholder="Description"
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
-      />
-      <input
-        className="box-short"
-        type="date"
-        value={date}
-        onChange={(e) => setDate(e.target.value)}
-      />
-      <input
-        className="box-short"
-        type="number"
-        placeholder="Price"
-        value={price}
-        onChange={(e) => setPrice(e.target.value)}
-      />
-    <button type="submit"> Add transaction </button>
-    </form>
-    </>
-    
-    
-  )
-}
+    </section>
 
+    <section className="card">
+      <h2>Add transaction</h2>
+      <form className="tx-form" onSubmit={handleAdd}>
+        <input className="box-wide" placeholder="Category" value={category} onChange={(e) => setCategory(e.target.value)} />
+        <input className="box-wide" placeholder="Description" value={description} onChange={(e) => setDescription(e.target.value)} />
+        <input className="box-short" type="date" value={date} onChange={(e) => setDate(e.target.value)} />
+        <input className="box-short" type="number" placeholder="Price" value={price} onChange={(e) => setPrice(e.target.value)} />
+        <button type="submit">Add transaction</button>
+      </form>
+    </section>
+  </main>
+)
+}
 export default App
